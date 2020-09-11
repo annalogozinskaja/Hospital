@@ -1,0 +1,44 @@
+CREATE SEQUENCE hibernate_sequence START 1;  
+CREATE SEQUENCE idgender_sequence START 1;
+CREATE SEQUENCE genderid_sequence START 1;
+
+CREATE TABLE Human(
+	id integer PRIMARY KEY DEFAULT nextval('hibernate_sequence'::regclass),
+	lastname VARCHAR(100),
+	firstname VARCHAR(100),
+	DOB VARCHAR(100),
+	SSN INT,
+	activeStatus INT,
+	GenderId INT DEFAULT nextval('genderid_sequence'::regclass)
+);
+
+CREATE TABLE Gender(
+	GenderId integer PRIMARY KEY DEFAULT nextval('idgender_sequence'::regclass),
+        gendername VARCHAR(100)
+);
+
+ALTER TABLE Human
+ADD CONSTRAINT FK_human_gender 
+FOREIGN KEY (GenderId) 
+REFERENCES Gender (GenderId) 
+ON UPDATE CASCADE;
+
+INSERT INTO Gender(gendername) VALUES
+    ('male'),
+    ('female'),
+    ('animal');
+	
+INSERT INTO Human(lastname,firstname,DOB ,SSN,activeStatus,GenderId) VALUES
+    ('Novikov','Andrew','17th of January 1991', 123456789,1,1),
+    ('Sokolova','Helen','25th of September 1985', 987654321,1,2),
+    ('Ivanov','Igor','29th of November 1974', 123123456,0,1);
+
+
+
+
+
+
+
+
+
+
