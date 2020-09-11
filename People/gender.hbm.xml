@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="People" assembly="People">
+	<class name="gender" table="gender">
+		<id name="GenderId" column="GenderId">
+			<generator class="native"/>
+		</id>
+		<property name="gendername" column="gendername"  />
+		<bag name="Human" inverse="true">
+			<key column="GenderId"/>
+			<one-to-many class="human" />
+		</bag>
+	</class>
+</hibernate-mapping>

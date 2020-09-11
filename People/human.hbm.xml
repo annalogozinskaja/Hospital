@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" 
+	namespace="People" assembly="People">
+  <class name="human" table="human">
+    <id name="id" column="id">
+      <generator class="native"/>
+    </id>
+    <property name="lastname" column="lastname"  />
+	<property name="firstname" column="firstname"  />
+	<property name="DOB" column="DOB"  />
+	<property name="SSN" column="SSN"  />
+	<property name="activeStatus" column="activeStatus"  />
+	  <many-to-one name = "gender" class="gender" column = "GenderId" cascade = "save-update"/>
+  </class>
+</hibernate-mapping>
