@@ -1,0 +1,205 @@
+CREATE SEQUENCE hibernate_sequence START 1;  
+CREATE SEQUENCE idgender_sequence START 1;
+CREATE SEQUENCE genderid_sequence START 1;
+CREATE SEQUENCE idrelative_sequence START 1;
+CREATE SEQUENCE iddoctor_sequence START 1;
+CREATE SEQUENCE idorderstatus_sequence START 1;
+CREATE SEQUENCE orderstatusid_sequence START 1;
+CREATE SEQUENCE iddoctorpatient_sequence START 1;
+CREATE SEQUENCE doctorid_sequence START 1;
+CREATE SEQUENCE patientid_sequence START 1;
+CREATE SEQUENCE idorder_sequence START 1;
+CREATE SEQUENCE orderid_sequence START 1;
+CREATE SEQUENCE idmaterial_sequence START 1;
+CREATE SEQUENCE idspeciment_sequence START 1;
+CREATE SEQUENCE idspecimentstatus_sequence START 1;
+CREATE SEQUENCE specimentstatusid_sequence START 1;
+CREATE SEQUENCE materialid_sequence START 1;
+CREATE SEQUENCE idteststatus_sequence START 1;
+CREATE SEQUENCE idtest_sequence START 1;
+CREATE SEQUENCE teststatusid_sequence START 1;
+CREATE SEQUENCE idspecimenttest_sequence START 1;
+CREATE SEQUENCE specimentid_sequence START 1;
+CREATE SEQUENCE testid_sequence START 1;
+
+CREATE TABLE Patient(
+	ID_Patient integer PRIMARY KEY DEFAULT nextval('hibernate_sequence'::regclass),
+	Lastname VARCHAR(100),
+	Firstname VARCHAR(100),
+	DOB VARCHAR(100),
+	SSN INT UNIQUE,
+	ID_Gender INT DEFAULT nextval('genderid_sequence'::regclass)
+);
+
+CREATE TABLE Gender(
+	ID_Gender integer PRIMARY KEY DEFAULT nextval('idgender_sequence'::regclass),
+        GenderName VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE Relative(
+	ID_Relative integer PRIMARY KEY DEFAULT nextval('idrelative_sequence'::regclass),
+	Lastname VARCHAR(100),
+	Firstname VARCHAR(100),
+	DOB VARCHAR(100),
+	ID_Patient INT DEFAULT nextval('patientid_sequence'::regclass),
+	ID_Gender INT DEFAULT nextval('genderid_sequence'::regclass)
+);
+
+CREATE TABLE Doctor(
+	ID_Doctor integer PRIMARY KEY DEFAULT nextval('iddoctor_sequence'::regclass),
+	Lastname VARCHAR(100),
+	Firstname VARCHAR(100),
+	FieldOfMedicine VARCHAR(100)
+);
+
+CREATE TABLE OrderStatus(
+	ID_OrderStatus integer PRIMARY KEY DEFAULT nextval('idorderstatus_sequence'::regclass),
+	OrderName VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE OrderOfPatient(
+	ID_Order integer PRIMARY KEY DEFAULT nextval('idorder_sequence'::regclass),
+	DateOrder date,
+	Symptoms VARCHAR(100),
+	ID_OrderStatus INT DEFAULT nextval('orderstatusid_sequence'::regclass)
+);
+
+CREATE TABLE DoctorPatientRelations(
+	ID_DoctorPatient integer PRIMARY KEY DEFAULT nextval('iddoctorpatient_sequence'::regclass),
+	ID_Doctor INT DEFAULT nextval('doctorid_sequence'::regclass),
+	ID_Patient INT DEFAULT nextval('patientid_sequence'::regclass),
+	ID_Order INT DEFAULT nextval('orderid_sequence'::regclass)
+);
+
+CREATE TABLE Material(
+	ID_Material integer PRIMARY KEY DEFAULT nextval('idmaterial_sequence'::regclass),
+	MaterialName VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE SpecimentStatus(
+	ID_SpecimentStatus integer PRIMARY KEY DEFAULT nextval('idspecimentstatus_sequence'::regclass),
+	SpecimentStatusName VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE Speciment(
+	ID_Speciment integer PRIMARY KEY DEFAULT nextval('idspeciment_sequence'::regclass),
+	SpecimentName VARCHAR(100) UNIQUE,
+	ID_Order INT DEFAULT nextval('orderid_sequence'::regclass),
+	ID_Material INT DEFAULT nextval('materialid_sequence'::regclass),
+	ID_SpecimentStatus INT DEFAULT nextval('specimentstatusid_sequence'::regclass),
+	DateOfTaking date,
+	Nurse VARCHAR(100)	
+);
+
+CREATE TABLE TestStatus(
+	ID_TestStatus integer PRIMARY KEY DEFAULT nextval('idteststatus_sequence'::regclass),
+	TestStatusName VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE Test(
+	ID_Test integer PRIMARY KEY DEFAULT nextval('idtest_sequence'::regclass),
+	TestName VARCHAR(100) UNIQUE,
+	DateStart date,
+	DateEnd date,
+	ID_TestStatus INT DEFAULT nextval('teststatusid_sequence'::regclass),
+	Result VARCHAR(100)	
+);
+
+
+CREATE TABLE SpecimentTest(
+	ID_SpecimentTest integer PRIMARY KEY DEFAULT nextval('idspecimenttest_sequence'::regclass),
+	ID_Speciment INT DEFAULT nextval('specimentid_sequence'::regclass),
+	ID_Test INT DEFAULT nextval('testid_sequence'::regclass)
+);
+
+
+
+ALTER TABLE Patient
+ADD CONSTRAINT FK_patient_gender 
+FOREIGN KEY (ID_Gender) 
+REFERENCES Gender (ID_Gender) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Relative
+ADD CONSTRAINT FK_relative_gender 
+FOREIGN KEY (ID_Gender) 
+REFERENCES Gender (ID_Gender) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Relative
+ADD CONSTRAINT FK_relative_patient 
+FOREIGN KEY (ID_Patient) 
+REFERENCES Patient (ID_Patient) 
+ON UPDATE CASCADE;
+
+ALTER TABLE OrderOfPatient
+ADD CONSTRAINT FK_order_orderstatus 
+FOREIGN KEY (ID_OrderStatus) 
+REFERENCES OrderStatus (ID_OrderStatus) 
+ON UPDATE CASCADE;
+
+ALTER TABLE DoctorPatientRelations
+ADD CONSTRAINT FK_doctorpatient_order 
+FOREIGN KEY (ID_Order) 
+REFERENCES OrderOfPatient (ID_Order) 
+ON UPDATE CASCADE;
+
+ALTER TABLE DoctorPatientRelations
+ADD CONSTRAINT FK_doctorpatient_patient 
+FOREIGN KEY (ID_Patient) 
+REFERENCES Patient (ID_Patient) 
+ON UPDATE CASCADE;
+
+ALTER TABLE DoctorPatientRelations
+ADD CONSTRAINT FK_doctorpatient_doctor
+FOREIGN KEY (ID_Doctor) 
+REFERENCES Doctor (ID_Doctor) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Speciment
+ADD CONSTRAINT FK_speciment_material 
+FOREIGN KEY (ID_Material) 
+REFERENCES Material (ID_Material) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Speciment
+ADD CONSTRAINT FK_speciment_specimentstatus 
+FOREIGN KEY (ID_SpecimentStatus) 
+REFERENCES SpecimentStatus (ID_SpecimentStatus) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Speciment
+ADD CONSTRAINT FK_speciment_order
+FOREIGN KEY (ID_Order) 
+REFERENCES OrderOfPatient (ID_Order) 
+ON UPDATE CASCADE;
+
+ALTER TABLE Test
+ADD CONSTRAINT FK_test_teststatus 
+FOREIGN KEY (ID_TestStatus) 
+REFERENCES TestStatus (ID_TestStatus) 
+ON UPDATE CASCADE;
+
+ALTER TABLE SpecimentTest
+ADD CONSTRAINT FK_specimenttest_test 
+FOREIGN KEY (ID_Test) 
+REFERENCES Test (ID_Test) 
+ON UPDATE CASCADE;
+
+ALTER TABLE SpecimentTest
+ADD CONSTRAINT FK_specimenttest_speciment 
+FOREIGN KEY (ID_Speciment) 
+REFERENCES Speciment (ID_Speciment) 
+ON UPDATE CASCADE;
+
+
+
+
+
+
+
+
+
+
+
+
