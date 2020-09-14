@@ -10,23 +10,25 @@ CREATE SEQUENCE doctorid_sequence START 1;
 CREATE SEQUENCE patientid_sequence START 1;
 CREATE SEQUENCE idorder_sequence START 1;
 CREATE SEQUENCE orderid_sequence START 1;
-CREATE SEQUENCE idmaterial_sequence START 1;
 CREATE SEQUENCE idspeciment_sequence START 1;
 CREATE SEQUENCE idspecimentstatus_sequence START 1;
 CREATE SEQUENCE specimentstatusid_sequence START 1;
-CREATE SEQUENCE materialid_sequence START 1;
 CREATE SEQUENCE idteststatus_sequence START 1;
 CREATE SEQUENCE idtest_sequence START 1;
 CREATE SEQUENCE teststatusid_sequence START 1;
-CREATE SEQUENCE idspecimenttest_sequence START 1;
+CREATE SEQUENCE idtestspeciment_sequence START 1;
 CREATE SEQUENCE specimentid_sequence START 1;
 CREATE SEQUENCE testid_sequence START 1;
+CREATE SEQUENCE idspecimentorder_sequence START 1;
+CREATE SEQUENCE specimentorderid_sequence START 1;
+CREATE SEQUENCE idtestorder_sequence START 1;
+CREATE SEQUENCE testorderid_sequence START 1;
 
 CREATE TABLE Patient(
 	ID_Patient integer PRIMARY KEY DEFAULT nextval('hibernate_sequence'::regclass),
 	Lastname VARCHAR(100),
 	Firstname VARCHAR(100),
-	DOB VARCHAR(100),
+	DOB date,
 	SSN INT UNIQUE,
 	ID_Gender INT DEFAULT nextval('genderid_sequence'::regclass)
 );
@@ -40,7 +42,8 @@ CREATE TABLE Relative(
 	ID_Relative integer PRIMARY KEY DEFAULT nextval('idrelative_sequence'::regclass),
 	Lastname VARCHAR(100),
 	Firstname VARCHAR(100),
-	DOB VARCHAR(100),
+	DOB date,
+	KindOfRelationship VARCHAR(100),
 	ID_Patient INT DEFAULT nextval('patientid_sequence'::regclass),
 	ID_Gender INT DEFAULT nextval('genderid_sequence'::regclass)
 );
@@ -71,11 +74,6 @@ CREATE TABLE DoctorPatientRelations(
 	ID_Order INT DEFAULT nextval('orderid_sequence'::regclass)
 );
 
-CREATE TABLE Material(
-	ID_Material integer PRIMARY KEY DEFAULT nextval('idmaterial_sequence'::regclass),
-	MaterialName VARCHAR(100) UNIQUE
-);
-
 CREATE TABLE SpecimentStatus(
 	ID_SpecimentStatus integer PRIMARY KEY DEFAULT nextval('idspecimentstatus_sequence'::regclass),
 	SpecimentStatusName VARCHAR(100) UNIQUE
@@ -83,9 +81,13 @@ CREATE TABLE SpecimentStatus(
 
 CREATE TABLE Speciment(
 	ID_Speciment integer PRIMARY KEY DEFAULT nextval('idspeciment_sequence'::regclass),
-	SpecimentName VARCHAR(100) UNIQUE,
+	SpecimentName VARCHAR(100) UNIQUE	
+);
+
+CREATE TABLE SpecimentsInOrder(
+	ID_SpecimentOrder integer PRIMARY KEY DEFAULT nextval('idspecimentorder_sequence'::regclass),
 	ID_Order INT DEFAULT nextval('orderid_sequence'::regclass),
-	ID_Material INT DEFAULT nextval('materialid_sequence'::regclass),
+	ID_Speciment INT DEFAULT nextval('specimentid_sequence'::regclass),
 	ID_SpecimentStatus INT DEFAULT nextval('specimentstatusid_sequence'::regclass),
 	DateOfTaking date,
 	Nurse VARCHAR(100)	
@@ -96,20 +98,24 @@ CREATE TABLE TestStatus(
 	TestStatusName VARCHAR(100) UNIQUE
 );
 
-CREATE TABLE Test(
-	ID_Test integer PRIMARY KEY DEFAULT nextval('idtest_sequence'::regclass),
-	TestName VARCHAR(100) UNIQUE,
+CREATE TABLE TestsInOrder(
+	ID_TestOrder integer PRIMARY KEY DEFAULT nextval('idtestorder_sequence'::regclass),
+	ID_Test INT DEFAULT nextval('testid_sequence'::regclass),	
 	DateStart date,
 	DateEnd date,
 	ID_TestStatus INT DEFAULT nextval('teststatusid_sequence'::regclass),
 	Result VARCHAR(100)	
 );
 
+CREATE TABLE Test(
+	ID_Test integer PRIMARY KEY DEFAULT nextval('idtest_sequence'::regclass),
+	TestName VARCHAR(100) UNIQUE
+);
 
-CREATE TABLE SpecimentTest(
-	ID_SpecimentTest integer PRIMARY KEY DEFAULT nextval('idspecimenttest_sequence'::regclass),
-	ID_Speciment INT DEFAULT nextval('specimentid_sequence'::regclass),
-	ID_Test INT DEFAULT nextval('testid_sequence'::regclass)
+CREATE TABLE TestsOfSpeciment(
+	ID_TestSpeciment integer PRIMARY KEY DEFAULT nextval('idtestspeciment_sequence'::regclass),
+	ID_SpecimentOrder INT DEFAULT nextval('specimentorderid_sequence'::regclass),
+	ID_TestOrder INT DEFAULT nextval('testorderid_sequence'::regclass)		
 );
 
 
@@ -156,50 +162,142 @@ FOREIGN KEY (ID_Doctor)
 REFERENCES Doctor (ID_Doctor) 
 ON UPDATE CASCADE;
 
-ALTER TABLE Speciment
-ADD CONSTRAINT FK_speciment_material 
-FOREIGN KEY (ID_Material) 
-REFERENCES Material (ID_Material) 
-ON UPDATE CASCADE;
-
-ALTER TABLE Speciment
-ADD CONSTRAINT FK_speciment_specimentstatus 
+ALTER TABLE SpecimentsInOrder
+ADD CONSTRAINT FK_specimentorder_specimentstatus 
 FOREIGN KEY (ID_SpecimentStatus) 
 REFERENCES SpecimentStatus (ID_SpecimentStatus) 
 ON UPDATE CASCADE;
 
-ALTER TABLE Speciment
-ADD CONSTRAINT FK_speciment_order
+ALTER TABLE SpecimentsInOrder
+ADD CONSTRAINT FK_specimentorder_order
 FOREIGN KEY (ID_Order) 
 REFERENCES OrderOfPatient (ID_Order) 
 ON UPDATE CASCADE;
 
-ALTER TABLE Test
-ADD CONSTRAINT FK_test_teststatus 
-FOREIGN KEY (ID_TestStatus) 
-REFERENCES TestStatus (ID_TestStatus) 
-ON UPDATE CASCADE;
-
-ALTER TABLE SpecimentTest
-ADD CONSTRAINT FK_specimenttest_test 
-FOREIGN KEY (ID_Test) 
-REFERENCES Test (ID_Test) 
-ON UPDATE CASCADE;
-
-ALTER TABLE SpecimentTest
-ADD CONSTRAINT FK_specimenttest_speciment 
+ALTER TABLE SpecimentsInOrder
+ADD CONSTRAINT FK_specimentorder_speciment
 FOREIGN KEY (ID_Speciment) 
 REFERENCES Speciment (ID_Speciment) 
 ON UPDATE CASCADE;
 
+ALTER TABLE TestsInOrder
+ADD CONSTRAINT FK_testorder_teststatus 
+FOREIGN KEY (ID_TestStatus) 
+REFERENCES TestStatus (ID_TestStatus) 
+ON UPDATE CASCADE;
+
+ALTER TABLE TestsInOrder
+ADD CONSTRAINT FK_testorder_test 
+FOREIGN KEY (ID_Test) 
+REFERENCES Test (ID_Test) 
+ON UPDATE CASCADE;
+
+ALTER TABLE TestsOfSpeciment
+ADD CONSTRAINT FK_testspeciment_testorder 
+FOREIGN KEY (ID_TestOrder) 
+REFERENCES TestsInOrder (ID_TestOrder) 
+ON UPDATE CASCADE;
+
+ALTER TABLE TestsOfSpeciment
+ADD CONSTRAINT FK_testspeciment_speciment 
+FOREIGN KEY (ID_SpecimentOrder) 
+REFERENCES SpecimentsInOrder (ID_SpecimentOrder) 
+ON UPDATE CASCADE;
 
 
+INSERT INTO Gender(GenderName) VALUES
+    ('male'),
+    ('female');
+
+INSERT INTO Patient(Lastname,Firstname,DOB ,SSN,ID_Gender) VALUES
+    ('Novikov','Andrew','01/02/91', 123456789,1),
+    ('Sokolova','Helen','15/10/85', 987654321,2),
+    ('Ivanov','Igor','11/03/74', 123123456,1);
+
+INSERT INTO Relative(Lastname,Firstname,DOB,KindOfRelationship,ID_Patient,ID_Gender) VALUES
+    ('Novikova','Alina','01/02/91','wife', 1,2),
+    ('Sokolov','Artem','01/02/91','husband',2,1),
+    ('Ivanov','Sergej','01/02/91','son', 3,1);
+
+INSERT INTO Doctor(Lastname,Firstname,FieldOfMedicine) VALUES
+    ('Kushnir','Roman','cardiologist'),
+    ('Antonov','Oleg','otolaryngologist'),
+    ('Galkina','Olga','gastroenterologist');
+
+INSERT INTO OrderStatus(OrderName) VALUES
+    ('done'),
+    ('waiting');
+
+INSERT INTO OrderOfPatient(DateOrder,Symptoms,ID_OrderStatus) VALUES
+    ('22/08/20','heartache',1),
+    ('11/09/20','cough',1),
+    ('05/10/20','',2);
+
+INSERT INTO DoctorPatientRelations(ID_Doctor,ID_Patient,ID_Order) VALUES
+    (1,3,1),
+    (2,1,2),
+    (3,2,3);
 
 
+INSERT INTO SpecimentStatus(SpecimentStatusName) VALUES
+    ('waiting'),
+    ('in the laboratory'),
+    ('transportation to the test-clinic'),
+    ('in the test-clinic');
+
+INSERT INTO Speciment(SpecimentName) VALUES
+    ('blood speciment'),
+    ('urine speciment'),
+    ('saliva speciment');
+
+INSERT INTO SpecimentsInOrder(ID_Order,ID_Speciment,ID_SpecimentStatus,DateOfTaking,Nurse) VALUES
+    (1,1,4,'27/08/20','Savina'),
+    (1,2,4,'27/08/20','Smirnova'),
+    (2,1,2,'14/09/20','Fomina'),
+    (2,2,2,'14/09/20','Smirnova'),
+    (2,3,2,'14/09/20','Savina');
+    
+INSERT INTO TestStatus(TestStatusName) VALUES
+    ('waiting'),
+    ('in the test-clinic'),
+    ('reagent 1 involved'),
+    ('reagent 2 involved'),
+    ('reagent 3 involved'),
+    ('ready');
+
+INSERT INTO Test(TestName) VALUES
+    ('hormone test'),
+    ('genetic test'),
+    ('glucose test'),
+    ('liver function test'),
+    ('microbiological cultivation test'),
+    ('biochemical test'),
+    ('infection test');
 
 
+INSERT INTO TestsInOrder(ID_Test,DateStart,DateEnd,ID_TestStatus,Result) VALUES
+    (1,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (3,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (6,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (1,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (3,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (6,'28/08/20','29/08/20',6,'increased level of hormones and blood sugar'),
+    (6,'15/09/20','17/09/20',4,''),
+    (6,'15/09/20','17/09/20',4,''),
+    (5,'15/09/20','17/09/20',3,''),
+    (6,'15/09/20','17/09/20',4,''),
+    (7,'15/09/20','17/09/20',3,'');
 
 
-
-
-
+INSERT INTO TestsOfSpeciment(ID_SpecimentOrder,ID_TestOrder) VALUES
+    (1,1),
+    (1,2),
+    (1,3),
+    (2,1),
+    (2,2),
+    (2,3),
+    (3,7),
+    (4,8),
+    (5,9),
+    (5,10),
+    (5,11);
