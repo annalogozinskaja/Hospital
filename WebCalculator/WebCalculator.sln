@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCalculator", "WebCalculator\WebCalculator.csproj", "{D57737C8-2082-4E0D-A720-2ADC44890D11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsCalculator", "WinFormsCalculator\WinFormsCalculator.csproj", "{193AC45E-0D80-4EB5-B7D2-4EF0552AF6C7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D57737C8-2082-4E0D-A720-2ADC44890D11} = {D57737C8-2082-4E0D-A720-2ADC44890D11}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D57737C8-2082-4E0D-A720-2ADC44890D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57737C8-2082-4E0D-A720-2ADC44890D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57737C8-2082-4E0D-A720-2ADC44890D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57737C8-2082-4E0D-A720-2ADC44890D11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{193AC45E-0D80-4EB5-B7D2-4EF0552AF6C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{193AC45E-0D80-4EB5-B7D2-4EF0552AF6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{193AC45E-0D80-4EB5-B7D2-4EF0552AF6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{193AC45E-0D80-4EB5-B7D2-4EF0552AF6C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA9B8FE5-ABCE-4174-A0A8-5A62FA3C9D43}
+	EndGlobalSection
+EndGlobal
