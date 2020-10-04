@@ -15,13 +15,6 @@ namespace WinFormsCalculator.ServiceReference1 {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.WebCalculatorSoap")]
     public interface WebCalculatorSoap {
         
-        // CODEGEN: Generating message contract since element name HelloWorldResult from namespace http://tempuri.org/ is not marked nillable
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/HelloWorld", ReplyAction="*")]
-        WinFormsCalculator.ServiceReference1.HelloWorldResponse HelloWorld(WinFormsCalculator.ServiceReference1.HelloWorldRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/HelloWorld", ReplyAction="*")]
-        System.Threading.Tasks.Task<WinFormsCalculator.ServiceReference1.HelloWorldResponse> HelloWorldAsync(WinFormsCalculator.ServiceReference1.HelloWorldRequest request);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/Add", ReplyAction="*")]
         int Add(int a, int b);
         
@@ -45,67 +38,6 @@ namespace WinFormsCalculator.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/Divide", ReplyAction="*")]
         System.Threading.Tasks.Task<double> DivideAsync(int a, int b);
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class HelloWorldRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="HelloWorld", Namespace="http://tempuri.org/", Order=0)]
-        public WinFormsCalculator.ServiceReference1.HelloWorldRequestBody Body;
-        
-        public HelloWorldRequest() {
-        }
-        
-        public HelloWorldRequest(WinFormsCalculator.ServiceReference1.HelloWorldRequestBody Body) {
-            this.Body = Body;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.Runtime.Serialization.DataContractAttribute()]
-    public partial class HelloWorldRequestBody {
-        
-        public HelloWorldRequestBody() {
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class HelloWorldResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="HelloWorldResponse", Namespace="http://tempuri.org/", Order=0)]
-        public WinFormsCalculator.ServiceReference1.HelloWorldResponseBody Body;
-        
-        public HelloWorldResponse() {
-        }
-        
-        public HelloWorldResponse(WinFormsCalculator.ServiceReference1.HelloWorldResponseBody Body) {
-            this.Body = Body;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
-    public partial class HelloWorldResponseBody {
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public string HelloWorldResult;
-        
-        public HelloWorldResponseBody() {
-        }
-        
-        public HelloWorldResponseBody(string HelloWorldResult) {
-            this.HelloWorldResult = HelloWorldResult;
-        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -133,29 +65,6 @@ namespace WinFormsCalculator.ServiceReference1 {
         
         public WebCalculatorSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        WinFormsCalculator.ServiceReference1.HelloWorldResponse WinFormsCalculator.ServiceReference1.WebCalculatorSoap.HelloWorld(WinFormsCalculator.ServiceReference1.HelloWorldRequest request) {
-            return base.Channel.HelloWorld(request);
-        }
-        
-        public string HelloWorld() {
-            WinFormsCalculator.ServiceReference1.HelloWorldRequest inValue = new WinFormsCalculator.ServiceReference1.HelloWorldRequest();
-            inValue.Body = new WinFormsCalculator.ServiceReference1.HelloWorldRequestBody();
-            WinFormsCalculator.ServiceReference1.HelloWorldResponse retVal = ((WinFormsCalculator.ServiceReference1.WebCalculatorSoap)(this)).HelloWorld(inValue);
-            return retVal.Body.HelloWorldResult;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<WinFormsCalculator.ServiceReference1.HelloWorldResponse> WinFormsCalculator.ServiceReference1.WebCalculatorSoap.HelloWorldAsync(WinFormsCalculator.ServiceReference1.HelloWorldRequest request) {
-            return base.Channel.HelloWorldAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<WinFormsCalculator.ServiceReference1.HelloWorldResponse> HelloWorldAsync() {
-            WinFormsCalculator.ServiceReference1.HelloWorldRequest inValue = new WinFormsCalculator.ServiceReference1.HelloWorldRequest();
-            inValue.Body = new WinFormsCalculator.ServiceReference1.HelloWorldRequestBody();
-            return ((WinFormsCalculator.ServiceReference1.WebCalculatorSoap)(this)).HelloWorldAsync(inValue);
         }
         
         public int Add(int a, int b) {

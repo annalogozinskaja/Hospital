@@ -21,7 +21,7 @@ namespace WinFormsCalculator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int res=obj.Add(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            double res =obj.Add(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
             textBox3.Text = Convert.ToString(res); 
         }
 
@@ -35,6 +35,29 @@ namespace WinFormsCalculator
             textBox1.Clear();
             textBox2.Clear();
             textBox3.Clear();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            double res = obj.Subtract(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            textBox3.Text = Convert.ToString(res);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            double res = obj.Multiply(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            textBox3.Text = Convert.ToString(res);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            double res = obj.Divide(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            textBox3.Text = Convert.ToString(res);
         }
     }
 }

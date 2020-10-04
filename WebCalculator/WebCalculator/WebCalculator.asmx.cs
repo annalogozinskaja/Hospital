@@ -17,12 +17,6 @@ namespace WebCalculator
     public class WebCalculator : System.Web.Services.WebService
     {
 
-        //[WebMethod]
-        //public string HelloWorld()
-        //{
-        //    return "Hello World";
-        //}
-
         [WebMethod]
         public int Add(int a, int b)
         {
@@ -39,7 +33,7 @@ namespace WebCalculator
             return a * b;
         }
         [WebMethod]
-        public double Divide(int a, int b)
+        public double Divide(double a, double b)
         {
             if (b == 0) return Convert.ToDouble(-1);
             return Convert.ToDouble(a / b);
